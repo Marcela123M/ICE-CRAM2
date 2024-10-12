@@ -45,6 +45,7 @@ html, body {
 .botonIcono img {
     width: 80px;
     height: 80px;
+    ;
 }
 
 .botonIcono p {
@@ -84,5 +85,15 @@ label {
 
 h2 {
     font-weight: bold;
-    
+}
+
+#iconosDeMostrar {
+    display: flex;
+    justify-content: center;
+    .botonIcono {
+        margin: 10px;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
