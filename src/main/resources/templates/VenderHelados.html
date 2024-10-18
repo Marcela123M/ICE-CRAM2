@@ -3,35 +3,55 @@
 <head>
     <title>Vender Helado</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/CSS_EditarHelado.css">
+    <link rel="stylesheet" href="/css/CSS_VenderHelados.css">
 </head>
 <body>
 <div class="background">
     <div class="box">
         <form action="/venderHelados" method="post">
             <h2>Vender Helados</h2>
+
             <div class="modal-body">
 
-                <select name="nombreHelado" class="form-select form-select-lg mb-3" aria-label="Large select example" onchange="actualizarUnidadesDisponibles()">
+                <select id="nombreHelado" name="nombreHelado" class="form-select form-select-lg mb-3" aria-label="Large select example" onchange="actualizarUnidadesDisponibles()">
                     <option selected>Elija un Helado</option>
                     <th:block th:each="helado : ${helados}">
-                        <option th:value="${helado.nombre}" th:text="${helado.nombre}" th:attr="data-unidades=${helado.unidades}"></option>
+                        <option th:value="${helado.nombre}"
+                                th:text="${helado.nombre}"
+                                th:attr="data-unidades=${helado.unidades}, data-precio=${helado.precio}"></option>
                     </th:block>
                 </select>
 
-                <label>Unidades Disponibles:</label>
-                <input id="unidadesDisponibles" name="unidadesDisponibles" class="form-control" type="text" value=""
-                       aria-label="Disabled input example" disabled readonly>
+                <div class="formVender">
+                    <label>Unidades Disponibles:</label>
+                    <input id="unidadesDisponibles" name="unidadesDisponibles" class="form-control" type="text" value=""
+                           aria-label="Disabled input example" disabled readonly>
+                </div>
 
-                <label class="form-label">Unidades a Vender:</label>
-                <input name="unidadesVender" class="form-control form-control-lg" type="number"
-                       aria-label=".form-control-lg example" required><br>
-                
-                <select name="metodoPago" class="form-select form-select-lg mb-3" aria-label="Large select example">
-                    <option selected>Formas De Pago</option>
+
+                <div class="formVender">
+                    <label class="form-label">Unidades a Vender:</label>
+                    <input id="unidadesVender" name="unidadesVender" class="form-control form-control-lg" type="number"
+                           aria-label=".form-control-lg example" required oninput="actualizarTotalAPagar()">
+                </div>
+
+                <label>Metodos de Pago:</label>
+                <select id="metodoPago" name="metodoPago" class="form-select form-select-lg mb-3" aria-label="Large select example">
                     <option value="efectivo">Efectivo</option>
                     <option value="tarjeta">Tarjeta</option>
                 </select>
+
+                <div class="formVender">
+                    <label>Total a Pagar:</label>
+                    <input id="totalAPagar" name="totalAPagarDisplay" class="form-control" type="text" value=""
+                           aria-label="Disabled input example" disabled readonly>
+                </div>
+
+                <input type="hidden" id="totalAPagar" name="totalAPagar" value="">
+
+                <div id="error" th:if="${error}" class="alert alert-danger" role="alert">
+                    <p th:text="${error}"></p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button onclick="window.location.href='/home'" type="button" class="btn btn-secondary">Regresar</button>
@@ -42,10 +62,31 @@
 </div>
 <script>
     function actualizarUnidadesDisponibles() {
-        const select = document.querySelector('select[name="nombreHelado"]');
+        const select = document.getElementById('nombreHelado');
         const unidadesDisponibles = select.options[select.selectedIndex].getAttribute('data-unidades');
         document.getElementById('unidadesDisponibles').value = unidadesDisponibles;
+        actualizarTotalAPagar();
     }
+
+    function actualizarTotalAPagar() {
+        const select = document.getElementById('nombreHelado');
+        const precio = select.options[select.selectedIndex].getAttribute('data-precio');
+        const unidadesVender = document.getElementById('unidadesVender').value;
+        const metodoPago = document.getElementById('metodoPago').value;
+
+        if (precio && unidadesVender) {
+            let totalAPagar = precio * unidadesVender;
+            if (metodoPago === "tarjeta"){
+                totalAPagar += totalAPagar * 0.03;
+            }
+            document.getElementById('totalAPagar').value = totalAPagar.toFixed(2) + " pesos"; // Mostrar en el input visible
+            document.getElementsByName('totalAPagar')[0].value = totalAPagar.toFixed(2); // Actualizar el campo oculto
+        } else {
+            document.getElementById('totalAPagar').value = "";
+            document.getElementsByName('totalAPagar')[0].value = "";
+        }
+    }
+    document.getElementById('metodoPago').addEventListener('change', actualizarTotalAPagar);
 </script>
 </body>
 </html>

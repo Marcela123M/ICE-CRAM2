@@ -64,19 +64,19 @@ public class HeladoService {
         return true;
     }
 
-    public boolean venderHelados(String nombre, int unidadesVender, String metodoPago){
-        Helado heladoAlmacen = listaHeladeria.stream()
+    public boolean venderHelados(String nombre, int unidadesVender, String metodoPago, double totalAPagar){
+        Helado heladoH = listaHeladeria.stream()
                 .filter(h -> h.getNombre().equals(nombre))
                 .findFirst()
                 .orElse(null);
 
-        if (heladoAlmacen == null || heladoAlmacen.getUnidades() < unidadesVender) {
+        if (heladoH == null || heladoH.getUnidades() < unidadesVender) {
             return false; // No hay suficientes unidades o el helado no existe
         }
 
-        heladoAlmacen.setUnidades(heladoAlmacen.getUnidades() - unidadesVender);
+        heladoH.setUnidades(heladoH.getUnidades() - unidadesVender);
 
-        Helado heladoHeladeria = listaHeladosVendidos.stream()
+        Helado heladoV = listaHeladosVendidos.stream()
                 .filter(h -> h.getNombre().equals(nombre))
                 .findFirst()
                 .orElse(null);
@@ -91,8 +91,9 @@ public class HeladoService {
                 .findFirst()
                 .orElse(null);
 
-        if (heladoHeladeria != null) {
-            heladoHeladeria.setUnidades(heladoHeladeria.getUnidades() + unidadesVender);
+        if (heladoV != null) {
+            heladoV.setUnidades(heladoV.getUnidades() + unidadesVender);
+            heladoV.setPrecio(heladoV.getPrecio() + totalAPagar);
 
             if (metodoPago.equals("efectivo") && heladoEfectivo != null) {
                 heladoEfectivo.setUnidades(heladoEfectivo.getUnidades() + unidadesVender);
@@ -100,12 +101,12 @@ public class HeladoService {
                 heladoTarjeta.setUnidades(heladoEfectivo.getUnidades() + unidadesVender);
             }
         } else {
-            listaHeladosVendidos.add(new Helado(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getPrecio(), unidadesVender));
+            listaHeladosVendidos.add(new Helado(nombre, heladoH.getSabor(), totalAPagar, unidadesVender));
 
             if (metodoPago.equals("efectivo")) {
-                listaVendidoEfectivo.add(new Helado(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getPrecio(), unidadesVender));
+                listaVendidoEfectivo.add(new Helado(nombre, heladoH.getSabor(), totalAPagar, unidadesVender));
             } else if (metodoPago.equals("tarjeta")) {
-                listaVendidoTarjeta.add(new Helado(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getPrecio(), unidadesVender));
+                listaVendidoTarjeta.add(new Helado(nombre, heladoH.getSabor(), totalAPagar, unidadesVender));
             }
         }
         return true;

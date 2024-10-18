@@ -2,6 +2,7 @@ package com.example.IceCream_SpringBoot.controller;
 
 import com.example.IceCream_SpringBoot.model.Helado;
 import com.example.IceCream_SpringBoot.service.HeladoService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -155,17 +156,29 @@ public class HeladoController {
     public String venderHelados(@RequestParam String nombreHelado,
                                 @RequestParam int unidadesVender,
                                 @RequestParam String metodoPago,
+                                @RequestParam double totalAPagar,
                                 Model model) {
 
-        boolean success = heladoService.venderHelados(nombreHelado, unidadesVender, metodoPago);
+        boolean success = heladoService.venderHelados(nombreHelado, unidadesVender, metodoPago, totalAPagar);
 
         if (success) {
             return "redirect:/home";
         } else {
-            model.addAttribute("error", "Error al eliminar el helado.");
+            model.addAttribute("error", "Error al vender el helado.");
             return "VenderHelados";
         }
     }
 
+    @GetMapping("/heladosVendidos")
+    @ResponseBody
+    public String getHelados() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(heladoService.getListaHeladosVendidos());
+    }
+
+    @GetMapping("grafica")
+    public String mostrarHeladosVendidos(Model model) {
+        return "Grafica";
+    }
 
 }

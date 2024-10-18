@@ -1,17 +1,22 @@
 package com.example.IceCream_SpringBoot.service;
 
 import com.example.IceCream_SpringBoot.model.User;
+import com.example.IceCream_SpringBoot.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class AuthService {
 
-    private Set<User> usuariosRegistrados = new HashSet<>();
+    //private Set<User> usuariosRegistrados = new HashSet<>();
+    @Autowired
+    private UserRepository userRepository;
 
     public boolean usuarioExiste(String usuario) {
-        return usuariosRegistrados.stream().anyMatch(user -> user.getUsuario().equals(usuario));
+        return userRepository.findByUsuario(usuario).isPresent();
     }
 
     public boolean registrarNuevoUsuario(String usuario, String contrasena, String pin) {
@@ -23,12 +28,12 @@ public class AuthService {
         }
 
         User user = new User(usuario, contrasena);
-        usuariosRegistrados.add(user);
+        userRepository.save(user);
         return true;
     }
 
     public boolean validarUsuario(String usuario, String contrasena) {
-        return usuariosRegistrados.stream().anyMatch(user -> user.getUsuario().equals(usuario) &&
-                user.getContrasena().equals(contrasena));
+        Optional<User> user = userRepository.findByUsuario(usuario);
+        return user.isPresent() && user.get().getContrasena().equals(contrasena);
     }
 }
