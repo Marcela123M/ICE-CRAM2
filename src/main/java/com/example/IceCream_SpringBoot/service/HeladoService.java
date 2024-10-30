@@ -126,9 +126,10 @@ public class HeladoService {
             helado.setUnidades(unidades);
             helado.setPrecio(precio);
             return true;
+        } else {
+            return false;
         }
 
-        return false;
     }
 
     public boolean eliminarHelado(String ubicacion, String nombre) {

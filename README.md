@@ -11,4 +11,5 @@ una vez inicializado el proyecto puede utilizar las siguientes direcciones:<br>
 http://localhost:8080/login<br>
 http://localhost:8080/register<br>
 Pin: admin123<br>
------(Se grego el menu principal no funcional)-----<br>
+-----(Se grego el menu principal funcional)-----<br>
+Se agregaron los botones con sus respectivas funcionalidades, el proyecto es funcional

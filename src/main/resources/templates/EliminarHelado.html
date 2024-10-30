@@ -12,17 +12,20 @@
         <form action="/eliminarHelado" method="post">
             <h2>Eliminar Helado</h2>
 
-            <select id="ubicacionSelect" name="ubicacion" class="form-select form-select-lg mb-3" aria-label="Large select example">
-                <option selected>Elija la ubicacion</option>
+            <select id="ubicacionSelect" name="ubicacion" class="form-select form-select-lg mb-3" required aria-label="Large select example">
+                <option value="" selected>Elija la ubicacion</option>
                 <option value="almacen">Almacen</option>
                 <option value="heladeria">Heladeria</option>
             </select>
 
-            <select id="heladoSelect" name="nombre" class="form-select form-select-lg mb-3" aria-label="Large select example"
+            <select id="heladoSelect" name="nombre" class="form-select form-select-lg mb-3" required aria-label="Large select example"
                     disabled>
-                <option selected>Elija un Helado</option>
+                <option value="" selected>Elija un Helado</option>
             </select>
             <div class="modal-footer">
+                <div id="error" th:if="${error}" class="alert alert-danger" role="alert">
+                    <p th:text="${error}"></p>
+                </div>
                 <button onclick="window.location.href='/home'" type="button" class="btn btn-secondary">Regresar</button>
                 <button type="submit" class="btn btn-primary">Eliminar</button>
             </div>
@@ -41,7 +44,7 @@
                     data: {ubicacion: ubicacion},
                     success: function (helados) {
                         $('#heladoSelect').prop('disabled', false);
-                        $('#heladoSelect').empty().append('<option selected>Elija un Helado</option>');
+                        $('#heladoSelect').empty().append('<option value="" selected>Elija un Helado</option>');
                         helados.forEach(function (helado) {
                             $('#heladoSelect').append(new Option(helado.nombre, helado.nombre));
                         });

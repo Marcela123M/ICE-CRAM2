@@ -13,8 +13,8 @@
 
             <div class="modal-body">
 
-                <select id="nombreHelado" name="nombreHelado" class="form-select form-select-lg mb-3" aria-label="Large select example" onchange="actualizarUnidadesDisponibles()">
-                    <option selected>Elija un Helado</option>
+                <select id="nombreHelado" required name="nombreHelado" class="form-select form-select-lg mb-3" aria-label="Large select example" onchange="actualizarUnidadesDisponibles()">
+                    <option value="" selected>Elija un Helado</option>
                     <th:block th:each="helado : ${helados}">
                         <option th:value="${helado.nombre}"
                                 th:text="${helado.nombre}"
@@ -31,7 +31,7 @@
 
                 <div class="formVender">
                     <label class="form-label">Unidades a Vender:</label>
-                    <input id="unidadesVender" name="unidadesVender" class="form-control form-control-lg" type="number"
+                    <input id="unidadesVender" name="unidadesVender" class="form-control form-control-lg" type="number" min="1"
                            aria-label=".form-control-lg example" required oninput="actualizarTotalAPagar()">
                 </div>
 
@@ -66,6 +66,8 @@
         const unidadesDisponibles = select.options[select.selectedIndex].getAttribute('data-unidades');
         document.getElementById('unidadesDisponibles').value = unidadesDisponibles;
         actualizarTotalAPagar();
+
+        document.getElementById('unidadesVender').setAttribute('max', unidadesDisponibles);
     }
 
     function actualizarTotalAPagar() {

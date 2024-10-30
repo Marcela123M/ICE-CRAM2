@@ -19,7 +19,7 @@
             <!-- Boton Agregar helados al almacen -->
             <button type="button" class="botonIcono" data-bs-toggle="modal" data-bs-target="#modalAlmacen">
                 <img src="/img/almacen.png" alt="Icono">
-                <p>Agregar al Almacen</p>
+                <p>Agregar Helados</p>
             </button>
 
             <!-- Modal -->
@@ -28,7 +28,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title fs-5" id="staticBackdropLabel">Agregar Helado al Almacen</h2>
+                            <h2 class="modal-title fs-5" id="staticBackdropLabel">Agregar Helados</h2>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>
@@ -36,16 +36,16 @@
                             <form action="/agregarAlAlmacen" method="POST">
                                 <label class="form-label" for="nombre">Nombre:</label>
                                 <input class="form-control form-control-lg" type="text"
-                                       aria-label=".form-control-lg example" id="nombre" name="nombre">
+                                       aria-label=".form-control-lg example" id="nombre" name="nombre" required>
                                 <label class="form-label" for="sabor">Sabor:</label>
                                 <input class="form-control form-control-lg" type="text"
-                                       aria-label=".form-control-lg example" id="sabor" name="sabor">
+                                       aria-label=".form-control-lg example" id="sabor" name="sabor" required>
                                 <label class="form-label" for="precio">Precio:</label>
                                 <input class="form-control form-control-lg" type="number"
-                                       aria-label=".form-control-lg example" id="precio" name="precio">
+                                       aria-label=".form-control-lg example" id="precio" name="precio" datatype="number" min="1" required>
                                 <label class="form-label" for="unidades">Unidades:</label>
                                 <input class="form-control form-control-lg" type="number"
-                                       aria-label=".form-control-lg example" id="unidades" name="unidades"><br>
+                                       aria-label=".form-control-lg example" id="unidades" name="unidades" datatype="number" min="1" required><br>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar
                                     </button>

@@ -3,12 +3,11 @@ package com.example.IceCream_SpringBoot.controller;
 import com.example.IceCream_SpringBoot.model.Helado;
 import com.example.IceCream_SpringBoot.service.HeladoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +121,24 @@ public class HeladoController {
         } else {
             model.addAttribute("error", "Error al editar el helado.");
             return "EditarHelado";
+        }
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingParams(MissingServletRequestParameterException ex, HttpServletRequest request, Model model) {
+        String paramName = ex.getParameterName();
+        model.addAttribute("error", "Faltan campos requeridos");
+
+        String requestURI = request.getRequestURI();
+
+        if (requestURI.contains("/editarHelado")) {
+            return "EditarHelado";
+        } else if (requestURI.contains("/eliminarHelado")) {
+            return "EliminarHelado";
+        } else if (requestURI.contains("/moverHelado")) {
+            return "MoverAheladeria";
+        } else {
+            return "ErrorGeneral";
         }
     }
 
