@@ -193,9 +193,32 @@ public class HeladoController {
         return objectMapper.writeValueAsString(heladoService.getListaHeladosVendidos());
     }
 
+    @GetMapping("/heladosVendidosEfectivo")
+    @ResponseBody
+    public String getHeladosEfectivo() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(heladoService.getListaVendidoEfectivo());
+    }
+    
+    @GetMapping("/heladosVendidosTarjeta")
+    @ResponseBody
+    public String getHeladosTarjeta() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(heladoService.getListaVendidoTarjeta());
+    }
+
     @GetMapping("grafica")
     public String mostrarHeladosVendidos(Model model) {
         return "Grafica";
     }
 
+    @GetMapping("graficaEfectivo")
+    public String mostrarHeladosVendidosEfectivo(Model model) {
+        return "GraficaEfectivo";
+    }
+
+    @GetMapping("graficaTarjeta")
+    public String mostrarHeladosVendidosTarjeta(Model model) {
+        return "GraficaTarjeta";
+    }
 }
