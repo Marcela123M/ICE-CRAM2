@@ -4,9 +4,9 @@ import com.example.IceCream_SpringBoot.model.User;
 import com.example.IceCream_SpringBoot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
+//import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
+//import java.util.Set;
 
 @Service
 public class AuthService {
@@ -16,7 +16,7 @@ public class AuthService {
     private UserRepository userRepository;
 
     public boolean usuarioExiste(String usuario) {
-        return userRepository.findByUsuario(usuario).isPresent();
+        return userRepository.findByUsername(usuario).isPresent();
     }
 
     public boolean registrarNuevoUsuario(String usuario, String contrasena, String pin) {
@@ -33,7 +33,7 @@ public class AuthService {
     }
 
     public boolean validarUsuario(String usuario, String contrasena) {
-        Optional<User> user = userRepository.findByUsuario(usuario);
+        Optional<User> user = userRepository.findByUsername(usuario);
         return user.isPresent() && user.get().getContrasena().equals(contrasena);
     }
 }
