@@ -19,7 +19,7 @@
             <!-- Boton Agregar helados al almacen -->
             <button type="button" class="botonIcono" data-bs-toggle="modal" data-bs-target="#modalAlmacen">
                 <img src="/img/almacen.png" alt="Icono">
-                <p>Agregar Helados</p>
+                <p id="pAgregar">Agregar Helados <br>al almacen interno</p>
             </button>
 
             <!-- Modal -->
@@ -34,18 +34,27 @@
                         </div>
                         <div class="modal-body">
                             <form action="/agregarAlAlmacen" method="POST">
+
                                 <label class="form-label" for="nombre">Nombre:</label>
                                 <input class="form-control form-control-lg" type="text"
                                        aria-label=".form-control-lg example" id="nombre" name="nombre" required>
+
                                 <label class="form-label" for="sabor">Sabor:</label>
                                 <input class="form-control form-control-lg" type="text"
                                        aria-label=".form-control-lg example" id="sabor" name="sabor" required>
+                                
+                                <label class="form-label" for="sabor">Tipo:</label>
+                                <input class="form-control form-control-lg" type="text"
+                                        aria-label=".form-control-lg example" id="tipo" name="tipo" required>
+                                       
                                 <label class="form-label" for="precio">Precio:</label>
                                 <input class="form-control form-control-lg" type="number"
                                        aria-label=".form-control-lg example" id="precio" name="precio" datatype="number" min="1" required>
+
                                 <label class="form-label" for="unidades">Unidades:</label>
                                 <input class="form-control form-control-lg" type="number"
                                        aria-label=".form-control-lg example" id="unidades" name="unidades" datatype="number" min="1" required><br>
+                                       
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar
                                     </button>
@@ -62,15 +71,15 @@
             <!-- Boton Mover a Heladeria -->
             <button type="button" class="botonIcono" onclick="location.href='/moverHelado'">
                 <img src="/img/heladeria.png" alt="Icono">
-                <p>Mover a Heladeria</p>
+                <p>Mover helados al <br>Mostrador</p>
             </button>
 
-
-            <!-- Boton Vender Helados -->
+            
+            <!-- Boton Vender Helados 
             <button type="button" class="botonIcono" data-bs-toggle="modal" onclick="location.href='/venderHelados'">
                 <img src="/img/venderHelado.png" alt="Icono">
                 <p>Vender Helados</p>
-            </button>
+            </button> -->
 
             <!-- Boton Mostrar Helados -->
             <button type="button" class="botonIcono" data-bs-toggle="modal" data-bs-target="#modalMostrar">
@@ -130,7 +139,7 @@
             </button>
 
             <!-- Boton Cerrar Sesion -->
-            <a href="/login" class="botonIcono">
+            <a href="/logout" class="botonIcono">
                 <img src="/img/cerrarSesion.png" alt="Icono">
                 <p>Cerrar Sesion</p>
             </a>

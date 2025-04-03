@@ -1,6 +1,5 @@
 package com.example.IceCream_SpringBoot;
 
-import com.example.IceCream_SpringBoot.service.HeladoService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

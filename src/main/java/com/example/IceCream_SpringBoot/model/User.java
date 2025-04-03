@@ -7,7 +7,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    @Id
+    @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -15,7 +15,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String contrasena;
+    private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "usuario_id"))
@@ -25,9 +25,10 @@ public class User {
     public User() {
     }
 
-    public User(String usuario, String contrasena) {
-        this.username = usuario;
-        this.contrasena = contrasena;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.roles = Set.of("ROLE_USER"); 
     }
 
     public long getId() {
@@ -46,12 +47,20 @@ public class User {
         this.username = usuario;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+    public void setPassword(String contrasena) {
+        this.password = contrasena;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -59,7 +68,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", usuario='" + username + '\'' +
-                ", contrasena='" + contrasena + '\'' +
+                ", contrasena='" + password + '\'' +
                 '}';
     }
 }

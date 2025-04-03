@@ -1,169 +1,166 @@
 package com.example.IceCream_SpringBoot.service;
 
-import com.example.IceCream_SpringBoot.model.Helado;
-import com.example.IceCream_SpringBoot.model.User;
+import com.example.IceCream_SpringBoot.model.HeladoDocument;
+import com.example.IceCream_SpringBoot.repository.HeladoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HeladoService {
 
-    private ArrayList<Helado> listaAlmacen;
-    private ArrayList<Helado> listaHeladeria;
-    private ArrayList<Helado> listaHeladosVendidos;
-    private ArrayList<Helado> listaVendidoEfectivo;
-    private ArrayList<Helado> listaVendidoTarjeta;
-
-    public HeladoService() {
-        this.listaAlmacen = new ArrayList<>();
-        this.listaHeladeria = new ArrayList<>();
-        this.listaHeladosVendidos = new ArrayList<>();
-        this.listaVendidoEfectivo = new ArrayList<>();
-        this.listaVendidoTarjeta = new ArrayList<>();
-    }
+    @Autowired
+    private HeladoRepository heladoRepository;
 
     public boolean heladoExiste(String nombre) {
-        return listaAlmacen.stream().anyMatch(h -> h.getNombre().equals(nombre));
+        return heladoRepository.existsByNombre(nombre);
     }
 
-    public boolean agregarAlAlmacen(String nombre, String sabor, double precio, int unidades) {
+    public boolean agregarAlAlmacen(String nombre, String sabor, String tipo, double precio, int unidades) {
         if (heladoExiste(nombre)) {
             return false;
         }
-
-        Helado helado = new Helado(nombre, sabor, precio, unidades);
-        listaAlmacen.add(helado);
+        HeladoDocument helado = new HeladoDocument(nombre, sabor, tipo, precio, unidades, "almacen");
+        heladoRepository.save(helado);
         return true;
     }
 
     public boolean moverHeladoAHeladeria(String nombre, int unidadesMover) {
-        Helado heladoAlmacen = listaAlmacen.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
+        Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion("almacen")
+                .stream().filter(h -> h.getNombre().equals(nombre)).findFirst();
 
-        if (heladoAlmacen == null || heladoAlmacen.getUnidades() < unidadesMover) {
-            return false; // No hay suficientes unidades o el helado no existe
-        }
-
-        heladoAlmacen.setUnidades(heladoAlmacen.getUnidades() - unidadesMover);
-
-        Helado heladoHeladeria = listaHeladeria.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
-
-        if (heladoHeladeria != null) {
-            heladoHeladeria.setUnidades(heladoHeladeria.getUnidades() + unidadesMover);
-        } else {
-            listaHeladeria.add(new Helado(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getPrecio(), unidadesMover));
-        }
-
-        return true;
-    }
-
-    public boolean venderHelados(String nombre, int unidadesVender, String metodoPago, double totalAPagar){
-        Helado heladoH = listaHeladeria.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
-
-        if (heladoH == null || heladoH.getUnidades() < unidadesVender) {
-            return false; // No hay suficientes unidades o el helado no existe
-        }
-
-        heladoH.setUnidades(heladoH.getUnidades() - unidadesVender);
-
-        Helado heladoV = listaHeladosVendidos.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
-
-        Helado heladoEfectivo = listaVendidoEfectivo.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
-
-        Helado heladoTarjeta = listaVendidoTarjeta.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
-
-        if (heladoV != null) {
-            heladoV.setUnidades(heladoV.getUnidades() + unidadesVender);
-            heladoV.setPrecio(heladoV.getPrecio() + totalAPagar);
-
-            if (metodoPago.equals("efectivo") && heladoEfectivo != null) {
-                heladoEfectivo.setUnidades(heladoEfectivo.getUnidades() + unidadesVender);
-            } else if (metodoPago.equals("tarjeta") && heladoTarjeta != null) {
-                heladoTarjeta.setUnidades(heladoEfectivo.getUnidades() + unidadesVender);
-            }
-        } else {
-            listaHeladosVendidos.add(new Helado(nombre, heladoH.getSabor(), totalAPagar, unidadesVender));
-
-            if (metodoPago.equals("efectivo")) {
-                listaVendidoEfectivo.add(new Helado(nombre, heladoH.getSabor(), totalAPagar, unidadesVender));
-            } else if (metodoPago.equals("tarjeta")) {
-                listaVendidoTarjeta.add(new Helado(nombre, heladoH.getSabor(), totalAPagar, unidadesVender));
-            }
-        }
-        return true;
-    }
-
-    public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, int unidades, double precio) {
-        List<Helado> lista = ubicacion.equals("almacen") ? listaAlmacen : listaHeladeria;
-
-        Helado helado = lista.stream()
-                .filter(h -> h.getNombre().equals(nombreOriginal))
-                .findFirst()
-                .orElse(null);
-
-        if (helado != null) {
-            helado.setNombre(nombreNuevo);
-            helado.setSabor(sabor);
-            helado.setUnidades(unidades);
-            helado.setPrecio(precio);
-            return true;
-        } else {
+        if (optionalHelado.isEmpty() || optionalHelado.get().getUnidades() < unidadesMover) {
             return false;
         }
 
+        HeladoDocument heladoAlmacen = optionalHelado.get();
+        heladoAlmacen.setUnidades(heladoAlmacen.getUnidades() - unidadesMover);
+        heladoRepository.save(heladoAlmacen);
+
+        Optional<HeladoDocument> optionalHeladeria = heladoRepository.findByUbicacion("heladeria")
+                .stream().filter(h -> h.getNombre().equals(nombre)).findFirst();
+
+        if (optionalHeladeria.isPresent()) {
+            HeladoDocument heladoHeladeria = optionalHeladeria.get();
+            heladoHeladeria.setUnidades(heladoHeladeria.getUnidades() + unidadesMover);
+            heladoRepository.save(heladoHeladeria);
+        } else {
+            heladoRepository.save(new HeladoDocument(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getTipo(), heladoAlmacen.getPrecio(), unidadesMover, "heladeria"));
+        }
+
+        return true;
     }
 
+    public HeladoDocument obtenerHeladoPorNombreYUbicacion(String nombre, String ubicacion) {
+        return heladoRepository.findByUbicacion(ubicacion)
+                .stream().filter(h -> h.getNombre().equals(nombre)).findFirst().orElse(null);
+    }
+
+    /*public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, String tipo, int unidades, double precio) {
+        Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
+                .stream().filter(h -> h.getNombre().equals(nombreOriginal)).findFirst();
+
+        if (optionalHelado.isPresent()) {
+            HeladoDocument helado = optionalHelado.get();
+            helado.setNombre(nombreNuevo);
+            helado.setSabor(sabor);
+            helado.setTipo(tipo);
+            helado.setUnidades(unidades);
+            helado.setPrecio(precio);
+            heladoRepository.save(helado);
+            return true;
+        }
+        return false;
+    }*/
+
+    public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, String tipo, int unidades, double precio) {
+        // Buscar el helado en la ubicación específica
+        Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
+                .stream().filter(h -> h.getNombre().equals(nombreOriginal)).findFirst();
+    
+        // Si existe el helado en la ubicación específica, actualizar unidades y precio
+        if (optionalHelado.isPresent()) {
+            HeladoDocument helado = optionalHelado.get();
+            helado.setUnidades(unidades);
+            helado.setPrecio(precio);
+            heladoRepository.save(helado);
+    
+            // Actualizar nombre, sabor y tipo en todas las ubicaciones
+            actualizarEnTodasUbicaciones(nombreOriginal, nombreNuevo, sabor, tipo);
+    
+            return true;
+        }
+        return false;
+    }
+    
+    // Método para actualizar el nombre, sabor y tipo en todas las ubicaciones
+    private void actualizarEnTodasUbicaciones(String nombreOriginal, String nombreNuevo, String sabor, String tipo) {
+        List<HeladoDocument> helados = heladoRepository.findByNombre(nombreOriginal);
+    
+        if (!helados.isEmpty()) {
+            for (HeladoDocument helado : helados) {
+                helado.setNombre(nombreNuevo);
+                helado.setSabor(sabor);
+                helado.setTipo(tipo);
+            }
+            heladoRepository.saveAll(helados);
+        }
+    }
+    
+
     public boolean eliminarHelado(String ubicacion, String nombre) {
-        List<Helado> lista = ubicacion.equals("almacen") ? listaAlmacen : listaHeladeria;
+        Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
+                .stream().filter(h -> h.getNombre().equals(nombre)).findFirst();
 
-        Helado helado = lista.stream()
-                .filter(h -> h.getNombre().equals(nombre))
-                .findFirst()
-                .orElse(null);
-
-        if (helado != null) {
-            lista.remove(helado);
+        if (optionalHelado.isPresent()) {
+            heladoRepository.delete(optionalHelado.get());
             return true;
         }
         return false;
     }
 
-    public ArrayList<Helado> getListaAlmacen() {
-        return listaAlmacen;
+    public boolean venderHelados(String nombre, int unidadesVender, String metodoPago, double totalAPagar) {
+        Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion("heladeria")
+                .stream().filter(h -> h.getNombre().equals(nombre)).findFirst();
+
+        if (optionalHelado.isEmpty() || optionalHelado.get().getUnidades() < unidadesVender) {
+            return false;
+        }
+
+        HeladoDocument heladoH = optionalHelado.get();
+        heladoH.setUnidades(heladoH.getUnidades() - unidadesVender);
+        heladoRepository.save(heladoH);
+
+        heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar, unidadesVender, "vendido"));
+
+        if (metodoPago.equals("efectivo")) {
+            heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar, unidadesVender, "vendido_efectivo"));
+        } else if (metodoPago.equals("tarjeta")) {
+            heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar, unidadesVender, "vendido_tarjeta"));
+        }
+
+        return true;
     }
 
-    public ArrayList<Helado> getListaHeladeria() {
-        return listaHeladeria;
+    public List<HeladoDocument> getListaAlmacen() {
+        return heladoRepository.findByUbicacion("almacen");
     }
 
-    public ArrayList<Helado> getListaHeladosVendidos() {
-        return listaHeladosVendidos;
+    public List<HeladoDocument> getListaHeladeria() {
+        return heladoRepository.findByUbicacion("heladeria");
     }
 
-    public ArrayList<Helado> getListaVendidoEfectivo() {
-        return listaVendidoEfectivo;
+    public List<HeladoDocument> getListaHeladosVendidos() {
+        return heladoRepository.findByUbicacion("vendido");
     }
 
-    public ArrayList<Helado> getListaVendidoTarjeta() {
-        return listaVendidoTarjeta;
+    public List<HeladoDocument> getListaVendidoEfectivo() {
+        return heladoRepository.findByUbicacion("vendido_efectivo");
+    }
+
+    public List<HeladoDocument> getListaVendidoTarjeta() {
+        return heladoRepository.findByUbicacion("vendido_tarjeta");
     }
 }

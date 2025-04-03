@@ -16,6 +16,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Sabor</th>
+                <th>Tipo</th>
                 <th>Precio</th>
                 <th>Unidades</th>
             </tr>
@@ -25,6 +26,7 @@
             <tr th:each="helado : ${helados}">
                 <td th:text="${helado.nombre}">Nombre del Helado</td>
                 <td th:text="${helado.sabor}">Sabor del Helado</td>
+                <td th:text="${helado.tipo}">Tipo de Helado</td>
                 <td th:text="${helado.precio}">Precio del Helado</td>
                 <td th:text="${helado.unidades}">Unidades del Helado</td>
             </tr>

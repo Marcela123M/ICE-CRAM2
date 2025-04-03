@@ -32,6 +32,10 @@
             <input id="saborHelado" name="sabor" class="form-control form-control-lg" type="text"
                    aria-label=".form-control-lg example" disabled required>
 
+            <label class="form-label">Tipo:</label>
+            <input id="tipoHelado" name="tipo" class="form-control form-control-lg" type="text"
+                    aria-label=".form-control-lg example" disabled required>
+
             <label class="form-label">Unidades:</label>
             <input id="unidadesHelado" name="unidades" class="form-control form-control-lg" type="number"
                    aria-label=".form-control-lg example" disabled required>
@@ -96,6 +100,7 @@
                         if (data) {
                             $('#nombreHelado').val(data.nombre);
                             $('#saborHelado').val(data.sabor);
+                            $('#tipoHelado').val(data.tipo);
                             $('#unidadesHelado').val(data.unidades);
                             $('#precioHelado').val(data.precio);
                         }
@@ -108,6 +113,7 @@
         function limpiarCampos() {
             $('#nombreHelado').val('').prop('disabled', true);
             $('#saborHelado').val('').prop('disabled', true);
+            $('#tipoHelado').val('').prop('disabled', true);
             $('#unidadesHelado').val('').prop('disabled', true);
             $('#precioHelado').val('').prop('disabled', true);
         }
@@ -115,6 +121,7 @@
         function habilitarCampos() {
             $('#nombreHelado').prop('disabled', false);
             $('#saborHelado').prop('disabled', false);
+            $('#tipoHelado').prop('disabled', false);
             $('#unidadesHelado').prop('disabled', false);
             $('#precioHelado').prop('disabled', false);
         }

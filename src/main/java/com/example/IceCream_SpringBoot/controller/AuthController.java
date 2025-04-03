@@ -2,6 +2,7 @@ package com.example.IceCream_SpringBoot.controller;
 
 import com.example.IceCream_SpringBoot.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,37 +20,25 @@ public class AuthController {
         return "Login";
     }
 
-    @PostMapping("/login")
-    public String loginUser(@RequestParam String usuario,
-                            @RequestParam String password,
-                            Model model) {
-        if (authService.validarUsuario(usuario, password)) {
-            return "redirect:/home";
-        } else {
-            model.addAttribute("error", "Credenciales incorrectas");
-            return "Login";
-        }
-    }
-
     @GetMapping("/register")
     public String register() {
         return "Registro";
     }
 
     @PostMapping("/register")
-    public String registerUser(@RequestParam String usuario,
-                               @RequestParam String contrasena,
+    public String registerUser(@RequestParam String username,
+                               @RequestParam String password,
                                @RequestParam String pin,
                                Model model) {
-        if (authService.usuarioExiste(usuario)) {
+        if (authService.usuarioExiste(username)) {
             model.addAttribute("error", "El usuario ya existe");
             return "Registro";
         }
 
-        boolean success = authService.registrarNuevoUsuario(usuario, contrasena, pin);
+        boolean success = authService.registrarNuevoUsuario(username, password, pin);
 
         if (success) {
-            return "redirect:/home";
+            return "redirect:/login"; // Despues de registrar, redirige a la página de login
         } else {
             model.addAttribute("error", "Error al registrar el usuario. Inténtalo de nuevo.");
             return "Registro";
@@ -60,6 +49,9 @@ public class AuthController {
     public String home() {
         return "index";
     }
+
+    @GetMapping("/ventas")
+    public String ventas() {
+        return "VenderHelados";
+    }
 }
-
-

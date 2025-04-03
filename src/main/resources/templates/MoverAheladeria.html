@@ -15,9 +15,13 @@
                 <option value="" selected>Elija un Helado</option>
                 <!-- Itera sobre la lista de helados -->
                 <th:block th:each="helado : ${helados}">
-                    <option th:value="${helado.nombre}" th:text="${helado.nombre}" th:attr="data-unidades=${helado.unidades}"></option>
+                    <option th:value="${helado.nombre}" th:text="${helado.nombre}" th:attr="data-unidades=${helado.unidades}, data-tipo=${helado.tipo}"></option>
                 </th:block>
             </select>
+
+            <label>Tipo:</label>
+            <input id="tipo" name="tipo" class="form-control" type="text" value=""
+                   aria-label="Disabled input example" disabled readonly>
 
             <label>Unidades Disponibles:</label>
             <input id="unidadesDisponibles" name="unidadesDisponibles" class="form-control" type="text" value=""
@@ -41,7 +45,9 @@
     function actualizarUnidadesDisponibles() {
         var select = document.getElementById('heladoSelect');
         var unidadesDisponibles = select.options[select.selectedIndex].getAttribute('data-unidades');
+        var tipoHelado = select.options[select.selectedIndex].getAttribute('data-tipo');
 
+        document.getElementById('tipo').value = tipoHelado;
         document.getElementById('unidadesDisponibles').value = unidadesDisponibles;
         document.getElementById('unidadesMover').setAttribute('max', unidadesDisponibles);
     }

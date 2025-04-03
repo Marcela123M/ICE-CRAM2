@@ -3,7 +3,8 @@ Proyecto de Aula - SpringBoot<br>
 <h3>Integrantes:</h3>
 Juan Guzman<br>
 Oscar Taborda<br>
-Dilan Osorio
+Dilan Osorio<br>
+Jean Benavides
 <h2>Informacion:</h2>
 -----(Registro e inicio de sesion funcional)-----<br>
 Para probar el proyecto descargue el zip, extraigalo y abra la carpeta con su IDE(de preferencia Intellij)<br>

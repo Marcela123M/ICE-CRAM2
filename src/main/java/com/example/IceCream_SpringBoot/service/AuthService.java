@@ -3,17 +3,17 @@ package com.example.IceCream_SpringBoot.service;
 import com.example.IceCream_SpringBoot.model.User;
 import com.example.IceCream_SpringBoot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-//import java.util.HashSet;
-import java.util.Optional;
-//import java.util.Set;
 
 @Service
 public class AuthService {
 
-    //private Set<User> usuariosRegistrados = new HashSet<>();
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; //Inyectamos el encriptador de contraseñas
 
     public boolean usuarioExiste(String usuario) {
         return userRepository.findByUsername(usuario).isPresent();
@@ -21,19 +21,18 @@ public class AuthService {
 
     public boolean registrarNuevoUsuario(String usuario, String contrasena, String pin) {
         if (usuarioExiste(usuario)) {
-            return false;
+            return false; // No permite registrar si el usuario ya existe
         }
-        if (!pin.equals("admin123")) {
-            return false;
+        if (!pin.equals("admin123")) { 
+            return false; //Solo registra si el PIN es correcto
         }
 
-        User user = new User(usuario, contrasena);
+        //Encripta la contraseña antes de guardarla
+        String hashedPassword = passwordEncoder.encode(contrasena);
+
+        //Crea el usuario y lo guarda en la base de datos
+        User user = new User(usuario, hashedPassword);
         userRepository.save(user);
         return true;
-    }
-
-    public boolean validarUsuario(String usuario, String contrasena) {
-        Optional<User> user = userRepository.findByUsername(usuario);
-        return user.isPresent() && user.get().getContrasena().equals(contrasena);
     }
 }

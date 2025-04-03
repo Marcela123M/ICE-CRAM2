@@ -1,34 +1,35 @@
-/*package com.example.IceCream_SpringBoot.model;
+package com.example.IceCream_SpringBoot.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import jakarta.persistence.Id;
 
-public class Helado {
+@Document(collection = "helados")
+public class HeladoDocument {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private String id;
     private String nombre;
     private String sabor;
+    private String tipo;
     private double precio;
     private int unidades;
+    private String ubicacion;
 
-    public Helado() {
-    }
-
-    public Helado(String nombre, String sabor, double precio, int unidades) {
+    public HeladoDocument(String nombre, String sabor, String tipo, double precio, int unidades, String ubicacion) {
         this.nombre = nombre;
         this.sabor = sabor;
+        this.tipo = tipo;
         this.precio = precio;
         this.unidades = unidades;
+        this.ubicacion = ubicacion;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -48,6 +49,14 @@ public class Helado {
         this.sabor = sabor;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public double getPrecio() {
         return precio;
     }
@@ -63,4 +72,14 @@ public class Helado {
     public void setUnidades(int unidades) {
         this.unidades = unidades;
     }
-}*/
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    
+}

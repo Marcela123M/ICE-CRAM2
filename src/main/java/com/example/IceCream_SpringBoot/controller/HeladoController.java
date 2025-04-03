@@ -1,33 +1,35 @@
 package com.example.IceCream_SpringBoot.controller;
 
-import com.example.IceCream_SpringBoot.model.Helado;
+import com.example.IceCream_SpringBoot.model.HeladoDocument;
 import com.example.IceCream_SpringBoot.service.HeladoService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class HeladoController {
 
-    HeladoService heladoService = new HeladoService();
+    @Autowired
+    private HeladoService heladoService; // Se inyecta correctamente
 
     @PostMapping("/agregarAlAlmacen")
     public String registerHelado(@RequestParam String nombre,
-                            @RequestParam String sabor,
-                            @RequestParam double precio,
-                            @RequestParam int unidades,
-                            Model model) {
+            @RequestParam String sabor,
+            @RequestParam String tipo,
+            @RequestParam double precio,
+            @RequestParam int unidades,
+            Model model) {
         if (heladoService.heladoExiste(nombre)) {
             model.addAttribute("error", "El nombre del helado ya existe");
+            return "index";
         }
 
-        boolean success = heladoService.agregarAlAlmacen(nombre, sabor, precio, unidades);
+        boolean success = heladoService.agregarAlAlmacen(nombre, sabor, tipo, precio, unidades);
 
         if (success) {
             return "redirect:/home";
@@ -39,15 +41,15 @@ public class HeladoController {
 
     @GetMapping("/moverHelado")
     public String mostrarFormularioMoverHelado(Model model) {
-        List<Helado> listaHelados = heladoService.getListaAlmacen();
+        List<HeladoDocument> listaHelados = heladoService.getListaAlmacen();
         model.addAttribute("helados", listaHelados);
         return "MoverAheladeria";
     }
 
     @PostMapping("/moverHelado")
     public String moverHelado(@RequestParam String nombreHelado,
-                              @RequestParam int unidadesMover,
-                              Model model) {
+            @RequestParam int unidadesMover,
+            Model model) {
         boolean success = heladoService.moverHeladoAHeladeria(nombreHelado, unidadesMover);
 
         if (success) {
@@ -60,16 +62,33 @@ public class HeladoController {
 
     @GetMapping("/heladosAlmacen")
     public String mostrarHeladosAlmacen(Model model) {
-        List<Helado> listaHelados = heladoService.getListaAlmacen();
+        List<HeladoDocument> listaHelados = heladoService.getListaAlmacen();
         model.addAttribute("helados", listaHelados);
         return "listaHelados";
     }
 
     @GetMapping("/heladosHeladeria")
     public String mostrarHeladosHeladeria(Model model) {
-        List<Helado> listaHelados = heladoService.getListaHeladeria();
+        List<HeladoDocument> listaHelados = heladoService.getListaHeladeria();
         model.addAttribute("helados", listaHelados);
         return "listaHelados";
+    }
+
+    @PostMapping("/obtenerHeladosPorUbicacion")
+    @ResponseBody
+    public List<HeladoDocument> obtenerHeladosPorUbicacion(@RequestParam String ubicacion) {
+        if (ubicacion.equals("almacen")) {
+            return heladoService.getListaAlmacen();
+        } else if (ubicacion.equals("heladeria")) {
+            return heladoService.getListaHeladeria();
+        }
+        return List.of();
+    }
+
+    @PostMapping("/obtenerDatosHelado")
+    @ResponseBody
+    public HeladoDocument obtenerDatosHelado(@RequestParam String nombreHelado, @RequestParam String ubicacion) {
+        return heladoService.obtenerHeladoPorNombreYUbicacion(nombreHelado, ubicacion);
     }
 
     @GetMapping("/editarHelado")
@@ -77,44 +96,16 @@ public class HeladoController {
         return "EditarHelado";
     }
 
-    @PostMapping("/obtenerHeladosPorUbicacion")
-    @ResponseBody
-    public List<Helado> obtenerHeladosPorUbicacion(@RequestParam String ubicacion) {
-        if (ubicacion.equals("almacen")) {
-            return heladoService.getListaAlmacen();
-        } else if (ubicacion.equals("heladeria")) {
-            return heladoService.getListaHeladeria();
-        }
-        return new ArrayList<>();
-    }
-
-    @PostMapping("/obtenerDatosHelado")
-    @ResponseBody
-    public Helado obtenerDatosHelado(@RequestParam String nombreHelado, @RequestParam String ubicacion) {
-        if (ubicacion.equals("almacen")) {
-            return heladoService.getListaAlmacen().stream()
-                    .filter(h -> h.getNombre().equals(nombreHelado))
-                    .findFirst()
-                    .orElse(null);
-        } else if (ubicacion.equals("heladeria")) {
-            return heladoService.getListaHeladeria().stream()
-                    .filter(h -> h.getNombre().equals(nombreHelado))
-                    .findFirst()
-                    .orElse(null);
-        }
-        return null;
-    }
-
     @PostMapping("/editarHelado")
     public String editarHelado(@RequestParam String ubicacion,
-                               @RequestParam String nombreOriginal,
-                               @RequestParam String nombreNuevo,
-                               @RequestParam String sabor,
-                               @RequestParam int unidades,
-                               @RequestParam double precio,
-                               Model model) {
-
-        boolean success = heladoService.editarHelado(ubicacion, nombreOriginal, nombreNuevo, sabor, unidades, precio);
+            @RequestParam String nombreOriginal,
+            @RequestParam String nombreNuevo,
+            @RequestParam String sabor,
+            @RequestParam String tipo,
+            @RequestParam int unidades,
+            @RequestParam double precio,
+            Model model) {
+        boolean success = heladoService.editarHelado(ubicacion, nombreOriginal, nombreNuevo, sabor, tipo, unidades, precio);
 
         if (success) {
             return "redirect:/home";
@@ -125,8 +116,8 @@ public class HeladoController {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public String handleMissingParams(MissingServletRequestParameterException ex, HttpServletRequest request, Model model) {
-        String paramName = ex.getParameterName();
+    public String handleMissingParams(MissingServletRequestParameterException ex, HttpServletRequest request,
+            Model model) {
         model.addAttribute("error", "Faltan campos requeridos");
 
         String requestURI = request.getRequestURI();
@@ -143,15 +134,14 @@ public class HeladoController {
     }
 
     @GetMapping("/eliminarHelado")
-    public String mostrarEliminarHelado(Model model){
+    public String mostrarEliminarHelado(Model model) {
         return "EliminarHelado";
     }
 
     @PostMapping("/eliminarHelado")
     public String eliminarHelado(@RequestParam String ubicacion,
-                                 @RequestParam String nombre,
-                                 Model model) {
-
+            @RequestParam String nombre,
+            Model model) {
         boolean success = heladoService.eliminarHelado(ubicacion, nombre);
 
         if (success) {
@@ -164,18 +154,17 @@ public class HeladoController {
 
     @GetMapping("/venderHelados")
     public String mostrarVenderHelados(Model model) {
-        List<Helado> listaHelados = heladoService.getListaHeladeria();
+        List<HeladoDocument> listaHelados = heladoService.getListaHeladeria();
         model.addAttribute("helados", listaHelados);
         return "VenderHelados";
     }
 
     @PostMapping("/venderHelados")
     public String venderHelados(@RequestParam String nombreHelado,
-                                @RequestParam int unidadesVender,
-                                @RequestParam String metodoPago,
-                                @RequestParam double totalAPagar,
-                                Model model) {
-
+            @RequestParam int unidadesVender,
+            @RequestParam String metodoPago,
+            @RequestParam double totalAPagar,
+            Model model) {
         boolean success = heladoService.venderHelados(nombreHelado, unidadesVender, metodoPago, totalAPagar);
 
         if (success) {
@@ -188,23 +177,20 @@ public class HeladoController {
 
     @GetMapping("/heladosVendidos")
     @ResponseBody
-    public String getHelados() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(heladoService.getListaHeladosVendidos());
+    public List<HeladoDocument> getHeladosVendidos() {
+        return heladoService.getListaHeladosVendidos();
     }
 
     @GetMapping("/heladosVendidosEfectivo")
     @ResponseBody
-    public String getHeladosEfectivo() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(heladoService.getListaVendidoEfectivo());
+    public List<HeladoDocument> getHeladosEfectivo() {
+        return heladoService.getListaVendidoEfectivo();
     }
-    
+
     @GetMapping("/heladosVendidosTarjeta")
     @ResponseBody
-    public String getHeladosTarjeta() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(heladoService.getListaVendidoTarjeta());
+    public List<HeladoDocument> getHeladosTarjeta() {
+        return heladoService.getListaVendidoTarjeta();
     }
 
     @GetMapping("grafica")
