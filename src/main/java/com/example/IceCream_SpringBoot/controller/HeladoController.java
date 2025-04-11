@@ -105,7 +105,8 @@ public class HeladoController {
             @RequestParam int unidades,
             @RequestParam double precio,
             Model model) {
-        boolean success = heladoService.editarHelado(ubicacion, nombreOriginal, nombreNuevo, sabor, tipo, unidades, precio);
+        boolean success = heladoService.editarHelado(ubicacion, nombreOriginal, nombreNuevo, sabor, tipo, unidades,
+                precio);
 
         if (success) {
             return "redirect:/home";
@@ -165,14 +166,20 @@ public class HeladoController {
             @RequestParam String metodoPago,
             @RequestParam double totalAPagar,
             Model model) {
+
         boolean success = heladoService.venderHelados(nombreHelado, unidadesVender, metodoPago, totalAPagar);
 
         if (success) {
-            return "redirect:/home";
+            model.addAttribute("mensaje", "¡Venta realizada con éxito!");
         } else {
             model.addAttribute("error", "Error al vender el helado.");
-            return "VenderHelados";
         }
+
+        // Volvemos a cargar la lista de helados para mostrarla
+        List<HeladoDocument> listaHelados = heladoService.getListaHeladeria();
+        model.addAttribute("helados", listaHelados);
+
+        return "VenderHelados";
     }
 
     @GetMapping("/heladosVendidos")

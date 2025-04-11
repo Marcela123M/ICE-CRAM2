@@ -1,94 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Vender Helado</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/CSS_VenderHelados.css">
 </head>
+
 <body>
-<div class="background">
-    <div class="box">
-        <form action="/venderHelados" method="post">
-            <h2>Vender Helados</h2>
+    <div class="background">
+        <div class="box">
+            <form action="/venderHelados" method="post">
+                <h2>Vender Helados</h2>
 
-            <div class="modal-body">
+                <div class="modal-body">
+                    <!-- Filtro por tipo -->
+                    <div class="formVender">
+                        <label for="tipoFiltro">Filtrar por tipo:</label>
+                        <select id="tipoFiltro" class="form-select" onchange="filtrarPorTipo()">
+                            <option value="todos">Todos</option>
+                            <option value="cono">Cono</option>
+                            <option value="paleta">Paleta</option>
+                            <option value="vaso">Vaso</option>
+                            <option value="galleta">Galleta</option>
+                        </select>
+                    </div>
 
-                <select id="nombreHelado" required name="nombreHelado" class="form-select form-select-lg mb-3" aria-label="Large select example" onchange="actualizarUnidadesDisponibles()">
-                    <option value="" selected>Elija un Helado</option>
-                    <th:block th:each="helado : ${helados}">
-                        <option th:value="${helado.nombre}"
-                                th:text="${helado.nombre}"
-                                th:attr="data-unidades=${helado.unidades}, data-precio=${helado.precio}"></option>
-                    </th:block>
-                </select>
+                    <!-- Mensajes -->
+                    <div th:if="${mensaje}" class="alert alert-success" role="alert">
+                        <span th:text="${mensaje}"></span>
+                    </div>
 
-                <div class="formVender">
-                    <label>Unidades Disponibles:</label>
-                    <input id="unidadesDisponibles" name="unidadesDisponibles" class="form-control" type="text" value=""
-                           aria-label="Disabled input example" disabled readonly>
+                    <div th:if="${error}" class="alert alert-danger" role="alert">
+                        <span th:text="${error}"></span>
+                    </div>
+
+                    <!-- Tarjetas de helados -->
+                    <div class="row row-cols-2 row-cols-md-6 g-3 mb-4" id="galeriaHelados">
+                        <th:block th:each="helado : ${helados}">
+                            <div class="col helado-col" th:data-tipo="${helado.tipo}">
+                                <div class="card h-100 helado-card" th:data-nombre="${helado.nombre}"
+                                    th:data-unidades="${helado.unidades}" th:data-precio="${helado.precio}"
+                                    onclick="seleccionarHelado(this)">
+                                    <img th:src="@{'/img/' + ${helado.tipo} + '.png'}"
+                                        onerror="this.onerror=null; this.src='/img/default.png';"
+                                        class="card-img-top helado-img" alt="helado">
+                                    <div class="card-body p-2 text-center">
+                                        <h6 class="card-title m-0" th:text="${helado.nombre}">Sabor</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+
+
+                    <!-- Campo oculto para enviar el nombre del helado -->
+                    <input type="hidden" id="nombreHelado" name="nombreHelado" required>
+
+                    <!-- Unidades disponibles -->
+                    <div class="formVender">
+                        <label>Unidades Disponibles:</label>
+                        <input id="unidadesDisponibles" name="unidadesDisponibles" class="form-control" type="text"
+                            value="" disabled readonly>
+                    </div>
+
+                    <!-- Unidades a vender -->
+                    <div class="formVender">
+                        <label class="form-label">Unidades a Vender:</label>
+                        <input id="unidadesVender" name="unidadesVender" class="form-control form-control-lg"
+                            type="number" min="1" required oninput="actualizarTotalAPagar()">
+                    </div>
+
+                    <!-- Método de pago -->
+                    <label>Metodos de Pago:</label>
+                    <select id="metodoPago" name="metodoPago" class="form-select form-select-lg mb-3">
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta</option>
+                    </select>
+
+                    <!-- Total a pagar (visible y oculto) -->
+                    <div class="formVender">
+                        <label>Total a Pagar:</label>
+                        <input id="totalAPagar" name="totalAPagarDisplay" class="form-control" type="text" disabled
+                            readonly>
+                        <input type="hidden" name="totalAPagar" value="">
+                    </div>
+
+                    <!-- Error -->
+                    <div id="error" th:if="${error}" class="alert alert-danger" role="alert">
+                        <p th:text="${error}"></p>
+                    </div>
                 </div>
 
-
-                <div class="formVender">
-                    <label class="form-label">Unidades a Vender:</label>
-                    <input id="unidadesVender" name="unidadesVender" class="form-control form-control-lg" type="number" min="1"
-                           aria-label=".form-control-lg example" required oninput="actualizarTotalAPagar()">
+                <!-- Botones -->
+                <div class="modal-footer">
+                    <button onclick="window.location.href='/logout'" type="button" class="btn btn-secondary">Cerrar
+                        Sesión</button>
+                    <button type="submit" class="btn btn-primary">Vender</button>
                 </div>
-
-                <label>Metodos de Pago:</label>
-                <select id="metodoPago" name="metodoPago" class="form-select form-select-lg mb-3" aria-label="Large select example">
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
-                </select>
-
-                <div class="formVender">
-                    <label>Total a Pagar:</label>
-                    <input id="totalAPagar" name="totalAPagarDisplay" class="form-control" type="text" value=""
-                           aria-label="Disabled input example" disabled readonly>
-                </div>
-
-                <input type="hidden" id="totalAPagar" name="totalAPagar" value="">
-
-                <div id="error" th:if="${error}" class="alert alert-danger" role="alert">
-                    <p th:text="${error}"></p>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button onclick="window.location.href='/logout'" type="button" class="btn btn-secondary">Cerrar Sesion</button>
-                <button type="submit" class="btn btn-primary">Vender</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-<script>
-    function actualizarUnidadesDisponibles() {
-        const select = document.getElementById('nombreHelado');
-        const unidadesDisponibles = select.options[select.selectedIndex].getAttribute('data-unidades');
-        document.getElementById('unidadesDisponibles').value = unidadesDisponibles;
-        actualizarTotalAPagar();
 
-        document.getElementById('unidadesVender').setAttribute('max', unidadesDisponibles);
-    }
+    <!-- JavaScript -->
+    <script>
+        function seleccionarHelado(card) {
+            // Limpiar selección anterior
+            const cards = document.querySelectorAll('.helado-card');
+            cards.forEach(c => c.classList.remove('border-primary', 'border', 'shadow'));
 
-    function actualizarTotalAPagar() {
-        const select = document.getElementById('nombreHelado');
-        const precio = select.options[select.selectedIndex].getAttribute('data-precio');
-        const unidadesVender = document.getElementById('unidadesVender').value;
-        const metodoPago = document.getElementById('metodoPago').value;
+            // Marcar como seleccionada
+            card.classList.add('border-primary', 'border', 'shadow');
 
-        if (precio && unidadesVender) {
+            // Obtener datos
+            const nombre = card.getAttribute('data-nombre');
+            const unidades = card.getAttribute('data-unidades');
+            const precio = card.getAttribute('data-precio');
+
+            // Actualizar campos
+            document.getElementById('nombreHelado').value = nombre;
+            document.getElementById('unidadesDisponibles').value = unidades;
+            document.getElementById('unidadesVender').setAttribute('max', unidades);
+
+            actualizarTotalAPagar();
+        }
+
+        function actualizarTotalAPagar() {
+            const selectedCard = document.querySelector('.helado-card.border-primary');
+            const unidadesVender = document.getElementById('unidadesVender').value;
+            const metodoPago = document.getElementById('metodoPago').value;
+
+            if (!selectedCard || !unidadesVender) {
+                document.getElementById('totalAPagar').value = "";
+                document.getElementsByName('totalAPagar')[0].value = "";
+                return;
+            }
+
+            const precio = selectedCard.getAttribute('data-precio');
             let totalAPagar = precio * unidadesVender;
-            if (metodoPago === "tarjeta"){
+
+            if (metodoPago === "tarjeta") {
                 totalAPagar += totalAPagar * 0.03;
             }
-            document.getElementById('totalAPagar').value = totalAPagar.toFixed(2) + " pesos"; // Mostrar en el input visible
-            document.getElementsByName('totalAPagar')[0].value = totalAPagar.toFixed(2); // Actualizar el campo oculto
-        } else {
-            document.getElementById('totalAPagar').value = "";
-            document.getElementsByName('totalAPagar')[0].value = "";
+
+            document.getElementById('totalAPagar').value = totalAPagar.toFixed(2) + " pesos";
+            document.getElementsByName('totalAPagar')[0].value = totalAPagar.toFixed(2);
         }
-    }
-    document.getElementById('metodoPago').addEventListener('change', actualizarTotalAPagar);
-</script>
+
+        function filtrarPorTipo() {
+            const tipoSeleccionado = document.getElementById('tipoFiltro').value;
+            const columnas = document.querySelectorAll('.helado-col');
+
+            columnas.forEach(col => {
+                const tipo = col.getAttribute('data-tipo');
+                if (tipoSeleccionado === "todos" || tipo === tipoSeleccionado) {
+                    col.style.display = "block";
+                } else {
+                    col.style.display = "none";
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const successAlert = document.querySelector(".alert-success");
+            const errorAlert = document.querySelector(".alert-danger");
+
+            // Si hay un mensaje de éxito, lo ocultamos después de 3 segundos
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.style.display = "none";
+                }, 3000);
+            }
+
+            // Si hay un mensaje de error, lo ocultamos después de 4 segundos
+            if (errorAlert) {
+                setTimeout(() => {
+                    errorAlert.style.display = "none";
+                }, 4000);
+            }
+        });
+
+        document.getElementById('metodoPago').addEventListener('change', actualizarTotalAPagar);
+
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const selectedCard = document.querySelector(".helado-card.border-primary");
+
+            if (!selectedCard) {
+                e.preventDefault(); // Detiene el envío del formulario
+                mostrarError("Seleccione un helado antes de vender.");
+            }
+        });
+
+        function mostrarError(mensaje) {
+            let errorDiv = document.getElementById("error");
+
+            if (!errorDiv) {
+                errorDiv = document.createElement("div");
+                errorDiv.id = "error";
+                errorDiv.className = "alert alert-danger mt-3";
+                document.querySelector(".modal-body").appendChild(errorDiv);
+            }
+
+            errorDiv.innerHTML = `<p>${mensaje}</p>`;
+            errorDiv.style.display = "block";
+
+            setTimeout(() => {
+                errorDiv.style.display = "none";
+            }, 4000);
+        }
+
+    </script>
+
 </body>
+
 </html>
