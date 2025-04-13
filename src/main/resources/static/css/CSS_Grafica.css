@@ -11,7 +11,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 150vh;
+    
 }
 
 .box {
@@ -53,3 +53,4 @@ h2 {
     height: 5vh;
 
 }
+

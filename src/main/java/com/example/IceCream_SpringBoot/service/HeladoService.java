@@ -58,23 +58,6 @@ public class HeladoService {
                 .stream().filter(h -> h.getNombre().equals(nombre)).findFirst().orElse(null);
     }
 
-    /*public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, String tipo, int unidades, double precio) {
-        Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
-                .stream().filter(h -> h.getNombre().equals(nombreOriginal)).findFirst();
-
-        if (optionalHelado.isPresent()) {
-            HeladoDocument helado = optionalHelado.get();
-            helado.setNombre(nombreNuevo);
-            helado.setSabor(sabor);
-            helado.setTipo(tipo);
-            helado.setUnidades(unidades);
-            helado.setPrecio(precio);
-            heladoRepository.save(helado);
-            return true;
-        }
-        return false;
-    }*/
-
     public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, String tipo, int unidades, double precio) {
         // Buscar el helado en la ubicación específica
         Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
