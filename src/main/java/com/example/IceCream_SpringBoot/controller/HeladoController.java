@@ -182,6 +182,11 @@ public class HeladoController {
         return "VenderHelados";
     }
 
+    @GetMapping("/reporte")
+    public String verReporte() {
+        return "reporte";
+    }
+
     @GetMapping("/heladosVendidos")
     @ResponseBody
     public List<HeladoDocument> getHeladosVendidos() {

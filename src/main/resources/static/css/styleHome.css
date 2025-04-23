@@ -89,11 +89,18 @@ h2 {
 
 #iconosDeMostrar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 30px; /* Espacio entre botones */
+    padding: 10px;
     .botonIcono {
         margin: 10px;
         display: inline-flex;
         flex-direction: column;
         align-items: center;
     }
+}
+
+#modalInterno {
+    
 }
