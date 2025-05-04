@@ -2,9 +2,11 @@ package com.example.IceCream_SpringBoot.service;
 
 import com.example.IceCream_SpringBoot.model.HeladoDocument;
 import com.example.IceCream_SpringBoot.repository.HeladoRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +49,8 @@ public class HeladoService {
             heladoHeladeria.setUnidades(heladoHeladeria.getUnidades() + unidadesMover);
             heladoRepository.save(heladoHeladeria);
         } else {
-            heladoRepository.save(new HeladoDocument(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getTipo(), heladoAlmacen.getPrecio(), unidadesMover, "heladeria"));
+            heladoRepository.save(new HeladoDocument(nombre, heladoAlmacen.getSabor(), heladoAlmacen.getTipo(),
+                    heladoAlmacen.getPrecio(), unidadesMover, "heladeria"));
         }
 
         return true;
@@ -58,30 +61,31 @@ public class HeladoService {
                 .stream().filter(h -> h.getNombre().equals(nombre)).findFirst().orElse(null);
     }
 
-    public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, String tipo, int unidades, double precio) {
+    public boolean editarHelado(String ubicacion, String nombreOriginal, String nombreNuevo, String sabor, String tipo,
+            int unidades, double precio) {
         // Buscar el helado en la ubicación específica
         Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
                 .stream().filter(h -> h.getNombre().equals(nombreOriginal)).findFirst();
-    
+
         // Si existe el helado en la ubicación específica, actualizar unidades y precio
         if (optionalHelado.isPresent()) {
             HeladoDocument helado = optionalHelado.get();
             helado.setUnidades(unidades);
             helado.setPrecio(precio);
             heladoRepository.save(helado);
-    
+
             // Actualizar nombre, sabor y tipo en todas las ubicaciones
             actualizarEnTodasUbicaciones(nombreOriginal, nombreNuevo, sabor, tipo);
-    
+
             return true;
         }
         return false;
     }
-    
+
     // Método para actualizar el nombre, sabor y tipo en todas las ubicaciones
     private void actualizarEnTodasUbicaciones(String nombreOriginal, String nombreNuevo, String sabor, String tipo) {
         List<HeladoDocument> helados = heladoRepository.findByNombre(nombreOriginal);
-    
+
         if (!helados.isEmpty()) {
             for (HeladoDocument helado : helados) {
                 helado.setNombre(nombreNuevo);
@@ -91,7 +95,6 @@ public class HeladoService {
             heladoRepository.saveAll(helados);
         }
     }
-    
 
     public boolean eliminarHelado(String ubicacion, String nombre) {
         Optional<HeladoDocument> optionalHelado = heladoRepository.findByUbicacion(ubicacion)
@@ -112,16 +115,21 @@ public class HeladoService {
             return false;
         }
 
+        LocalDateTime fechaVenta = LocalDateTime.now();
+
         HeladoDocument heladoH = optionalHelado.get();
         heladoH.setUnidades(heladoH.getUnidades() - unidadesVender);
         heladoRepository.save(heladoH);
 
-        heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar, unidadesVender, "vendido"));
+        heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar,
+                unidadesVender, "vendido", fechaVenta));
 
         if (metodoPago.equals("efectivo")) {
-            heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar, unidadesVender, "vendido_efectivo"));
+            heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar,
+                    unidadesVender, "vendido_efectivo", fechaVenta));
         } else if (metodoPago.equals("tarjeta")) {
-            heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar, unidadesVender, "vendido_tarjeta"));
+            heladoRepository.save(new HeladoDocument(nombre, heladoH.getSabor(), heladoH.getTipo(), totalAPagar,
+                    unidadesVender, "vendido_tarjeta", fechaVenta));
         }
 
         return true;

@@ -1,5 +1,7 @@
 package com.example.IceCream_SpringBoot.model;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import jakarta.persistence.Id;
@@ -15,6 +17,10 @@ public class HeladoDocument {
     private double precio;
     private int unidades;
     private String ubicacion;
+    private LocalDateTime fechaVenta;
+
+    public HeladoDocument() {
+    }
 
     public HeladoDocument(String nombre, String sabor, String tipo, double precio, int unidades, String ubicacion) {
         this.nombre = nombre;
@@ -23,6 +29,16 @@ public class HeladoDocument {
         this.precio = precio;
         this.unidades = unidades;
         this.ubicacion = ubicacion;
+    }
+
+    public HeladoDocument(String nombre, String sabor, String tipo, double precio, int unidades, String ubicacion, LocalDateTime fechaVenta) {
+        this.nombre = nombre;
+        this.sabor = sabor;
+        this.tipo = tipo;
+        this.precio = precio;
+        this.unidades = unidades;
+        this.ubicacion = ubicacion;
+        this.fechaVenta = fechaVenta;
     }
 
     public String getId() {
@@ -81,5 +97,11 @@ public class HeladoDocument {
         this.ubicacion = ubicacion;
     }
 
-    
+    public LocalDateTime getFechaVenta() {
+        return fechaVenta;
+    }
+
+    public void setFechaVenta(LocalDateTime fechaVenta) {
+        this.fechaVenta = fechaVenta;
+    } 
 }
