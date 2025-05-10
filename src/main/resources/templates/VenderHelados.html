@@ -53,7 +53,6 @@
                         </th:block>
                     </div>
 
-
                     <!-- Campo oculto para enviar el nombre del helado -->
                     <input type="hidden" id="nombreHelado" name="nombreHelado" required>
 
@@ -71,7 +70,43 @@
                             type="number" min="1" required oninput="actualizarTotalAPagar()">
                     </div>
 
+                    <!-- Datos del cliente -->
+                    <fieldset class="border p-3 mt-4">
+                        <legend class="w-auto">Datos del Cliente</legend>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="formVender">
+                                    <label for="nombreCliente">Nombre Cliente:</label>
+                                    <input id="nombreCliente" name="nombreCliente" class="form-control" type="text" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="formVender">
+                                    <label for="cedula">Cédula:</label>
+                                    <input id="cedula" name="cedula" class="form-control" type="text" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="formVender">
+                                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                                    <input id="fechaNacimiento" name="fechaNacimiento" class="form-control" type="date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="formVender">
+                                    <label for="telefono">Teléfono:</label>
+                                    <input id="telefono" name="telefono" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <!-- Método de pago -->
+                    <br>
                     <label>Metodos de Pago:</label>
                     <select id="metodoPago" name="metodoPago" class="form-select form-select-lg mb-3">
                         <option value="efectivo">Efectivo</option>

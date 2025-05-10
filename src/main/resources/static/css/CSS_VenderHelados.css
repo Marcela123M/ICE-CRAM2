@@ -50,10 +50,14 @@ input {
 h2 {
     margin-bottom: 10px;
 }
+
+#modal-footer button {
+    margin-left: 10px;
+}
+
 #error {
     padding: 0;
     height: 5vh;
-
 }
 
 .helado-img {
@@ -74,4 +78,21 @@ h2 {
 
 .helado-card.border-primary {
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilos específicos para el campo de Datos del Cliente */
+fieldset {
+    border: 2px solid #007bff;
+    border-radius: 10px;
+}
+
+legend {
+    width: auto;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.row .formVender {
+    margin-bottom: 10px;
 }

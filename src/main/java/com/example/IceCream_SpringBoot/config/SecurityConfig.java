@@ -51,21 +51,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desactivar solo para pruebas
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // público
                         .requestMatchers("/login", "/register", "/css/**", "/img/**").permitAll()
-                        .requestMatchers("/ventas", "/venderHelados").hasAnyRole("USER")
-                        .requestMatchers("/**").hasRole("ADMIN"))
+                        // rutas de ventas: solo USER
+                        .requestMatchers("/venderHelados", "/venderHelados/**").hasRole("USER")
+                        //Todo lo demas: ADMIN
+                        .anyRequest().hasRole("ADMIN"))
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler((request, response, authentication) -> {
-                            // Obtener el rol del usuario autenticado
-                            authentication.getAuthorities().forEach(authority -> {
+                        .successHandler((req, res, auth) -> {
+                            auth.getAuthorities().forEach(granted -> {
                                 try {
-                                    if (authority.getAuthority().equals("ROLE_ADMIN")) {
-                                        response.sendRedirect("/home");
-                                    } else if (authority.getAuthority().equals("ROLE_USER")) {
-                                        response.sendRedirect("/venderHelados");
+                                    if (granted.getAuthority().equals("ROLE_ADMIN")) {
+                                        res.sendRedirect("/home");
+                                    } else {
+                                        res.sendRedirect("/venderHelados");
                                     }
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
@@ -78,6 +80,7 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll());
+
         return http.build();
     }
 }
