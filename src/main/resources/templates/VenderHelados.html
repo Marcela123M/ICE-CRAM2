@@ -10,6 +10,12 @@
 <body>
     <div class="background">
         <div class="box">
+
+            <h1 style="text-align: center;" class="titulo">
+                <img src="/img/helado cool.png" class="marca">
+                <img src="/img/titulo.png" alt="">
+            </h1>
+
             <form action="/venderHelados" method="post">
                 <h2>Vender Helados</h2>
 
@@ -42,11 +48,17 @@
                                 <div class="card h-100 helado-card" th:data-nombre="${helado.nombre}"
                                     th:data-unidades="${helado.unidades}" th:data-precio="${helado.precio}"
                                     onclick="seleccionarHelado(this)">
+
+                                    <div class="card-body p-2 text-center">
+                                        <h6 class="card-title m-0" th:text="${helado.nombre}">Sabor</h6>
+                                    </div>
+
                                     <img th:src="@{'/img/' + ${helado.tipo} + '.png'}"
                                         onerror="this.onerror=null; this.src='/img/default.png';"
                                         class="card-img-top helado-img" alt="helado">
+
                                     <div class="card-body p-2 text-center">
-                                        <h6 class="card-title m-0" th:text="${helado.nombre}">Sabor</h6>
+                                        <h6 class="card-title m-0" th:text="'$' + ${helado.precio}">Precio</h6>
                                     </div>
                                 </div>
                             </div>
@@ -69,22 +81,30 @@
                         <input id="unidadesVender" name="unidadesVender" class="form-control form-control-lg"
                             type="number" min="1" required oninput="actualizarTotalAPagar()">
                     </div>
-
+                    
                     <!-- Datos del cliente -->
+                    <div id="mensajeBusqueda" style="display:none;" class="alert mt-2"></div>
                     <fieldset class="border p-3 mt-4">
                         <legend class="w-auto">Datos del Cliente</legend>
+
+                        
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="formVender">
                                     <label for="nombreCliente">Nombre Cliente:</label>
-                                    <input id="nombreCliente" name="nombreCliente" class="form-control" type="text" required>
+                                    <input id="nombreCliente" name="nombreCliente" class="form-control" type="text"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="formVender">
                                     <label for="cedula">Cédula:</label>
-                                    <input id="cedula" name="cedula" class="form-control" type="text" required>
+                                    <div class="input-group">
+                                        <input id="cedula" name="cedula" class="form-control" type="text" required>
+                                        <button type="button" class="btn btn-outline-primary"
+                                            onclick="buscarCliente()">Buscar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +113,8 @@
                             <div class="col-md-6">
                                 <div class="formVender">
                                     <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                                    <input id="fechaNacimiento" name="fechaNacimiento" class="form-control" type="date" required>
+                                    <input id="fechaNacimiento" name="fechaNacimiento" class="form-control" type="date"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -243,6 +264,48 @@
                 errorDiv.style.display = "none";
             }, 4000);
         }
+
+        function buscarCliente() {
+            const cedula = document.getElementById("cedula").value;
+
+            if (!cedula) {
+                mostrarMensajeBusqueda("Ingrese una cédula para buscar.", "danger");
+                return;
+            }
+
+            fetch(`/buscarCliente?cedula=${cedula}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("No se encontró el cliente.");
+                    }
+                    return response.json();
+                })
+                .then(cliente => {
+                    document.getElementById("nombreCliente").value = cliente.nombre;
+                    document.getElementById("fechaNacimiento").value = cliente.fechaNacimiento;
+                    document.getElementById("telefono").value = cliente.telefono;
+                    mostrarMensajeBusqueda("Cliente encontrado correctamente.", "success");
+                })
+                .catch(error => {
+                    // Si no se encuentra, limpia los campos
+                    document.getElementById("nombreCliente").value = "";
+                    document.getElementById("fechaNacimiento").value = "";
+                    document.getElementById("telefono").value = "";
+                    mostrarMensajeBusqueda(error.message, "danger");
+                });
+        }
+
+        function mostrarMensajeBusqueda(mensaje, tipo) {
+            const mensajeDiv = document.getElementById("mensajeBusqueda");
+            mensajeDiv.className = `alert alert-${tipo} mt-2`;
+            mensajeDiv.textContent = mensaje;
+            mensajeDiv.style.display = "block";
+
+            setTimeout(() => {
+                mensajeDiv.style.display = "none";
+            }, 3000);
+        }
+
 
     </script>
 

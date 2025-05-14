@@ -56,7 +56,7 @@ public class SecurityConfig {
                         // público
                         .requestMatchers("/login", "/register", "/css/**", "/img/**").permitAll()
                         // rutas de ventas: solo USER
-                        .requestMatchers("/venderHelados", "/venderHelados/**").hasRole("USER")
+                        .requestMatchers("/venderHelados", "/venderHelados/**", "/buscarCliente").hasRole("USER")
                         //Todo lo demas: ADMIN
                         .anyRequest().hasRole("ADMIN"))
                 .formLogin(form -> form

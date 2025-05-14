@@ -5,7 +5,7 @@ html, body {
 }
 
 .background {
-    background-image: url("/img/home.jpg");
+    background-image: url("/img/home.webp");
     background-size: cover;
     background-position: center;
     min-height: 100vh;
@@ -27,6 +27,18 @@ html, body {
     padding: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
+}
+
+.titulo img {
+    width: 400px;
+    
+    margin-bottom: 20px;
+    
+}
+
+.marca {
+    max-width: 125px;
+    max-height: 125px;
 }
 
 .formVender {
