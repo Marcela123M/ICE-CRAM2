@@ -4,13 +4,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "ventas")
 public class VentaDocument {
 
     @Id
     private String id;
-    private HeladoDocument helado;
+    private List<ItemVenta> helados;
     private String vendedor;
     private Cliente cliente;
     private String metodoPago;
@@ -19,8 +20,8 @@ public class VentaDocument {
 
     public VentaDocument() {}
 
-    public VentaDocument(HeladoDocument helado, String vendedor, Cliente cliente, String metodoPago, double total, LocalDateTime fechaVenta) {
-        this.helado = helado;
+    public VentaDocument(List<ItemVenta> helados, String vendedor, Cliente cliente, String metodoPago, double total, LocalDateTime fechaVenta) {
+        this.helados = helados;
         this.vendedor = vendedor;
         this.cliente = cliente;
         this.metodoPago = metodoPago;
@@ -36,12 +37,12 @@ public class VentaDocument {
         this.id = id;
     }
 
-    public HeladoDocument getHelado() {
-        return helado;
+    public List<ItemVenta> getHelados() {
+        return helados;
     }
 
-    public void setHelado(HeladoDocument helado) {
-        this.helado = helado;
+    public void setHelados(List<ItemVenta> helados) {
+        this.helados = helados;
     }
 
     public String getVendedor() {

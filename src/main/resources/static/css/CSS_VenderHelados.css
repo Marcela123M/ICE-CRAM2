@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -31,9 +32,9 @@ html, body {
 
 .titulo img {
     width: 400px;
-    
+
     margin-bottom: 20px;
-    
+
 }
 
 .marca {
@@ -46,7 +47,7 @@ html, body {
     margin-top: 10px;
 }
 
-.modal-footer button{
+.modal-footer button {
     margin-top: 10px;
     margin-left: 10px;
 }
@@ -107,4 +108,27 @@ legend {
 
 .row .formVender {
     margin-bottom: 10px;
+}
+
+/* Estilos para el carrito  */
+.helado-card {
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+}
+
+.helado-card:hover {
+    transform: scale(1.03);
+}
+
+#listaCarrito .list-group-item img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.cantidad-input-carrito {
+    width: 60px;
+    /* Ajusta el ancho según necesidad */
+    text-align: center;
 }
