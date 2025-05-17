@@ -1,0 +1,58 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.background {
+    background-image: url("/img/home.webp");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 90%;
+    max-width: 1200px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+h2 {
+    text-align: center;
+    font-weight: bold;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+ul li {
+    list-style-type: disc;
+}
+
+button {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    margin-right: 30px;
+}
+
+#boton-anterior {
+    margin-right: 5px;
+}

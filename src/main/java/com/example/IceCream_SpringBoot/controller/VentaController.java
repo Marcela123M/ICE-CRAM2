@@ -6,6 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.IceCream_SpringBoot.model.Cliente;
 import com.example.IceCream_SpringBoot.model.HeladoDocument;
+import com.example.IceCream_SpringBoot.model.VentaDocument;
 import com.example.IceCream_SpringBoot.repository.ClienteRepository;
+import com.example.IceCream_SpringBoot.repository.VentaRepository;
 import com.example.IceCream_SpringBoot.service.HeladoService;
 import com.example.IceCream_SpringBoot.service.VentaService;
 
@@ -33,6 +39,9 @@ public class VentaController {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private VentaRepository ventaRepository;
 
     @GetMapping("/venderHelados")
     public String mostrarFormularioVender(Model model) {
@@ -57,7 +66,8 @@ public class VentaController {
         String vendedor = principal.getName();
 
         // Validacion basica en el controlador
-        if (nombresHelados == null || unidadesVenderLista == null || nombresHelados.size() != unidadesVenderLista.size() || nombresHelados.isEmpty()) {
+        if (nombresHelados == null || unidadesVenderLista == null || nombresHelados.size() != unidadesVenderLista.size()
+                || nombresHelados.isEmpty()) {
             model.addAttribute("error", "Error en los datos de los helados enviados. Intente de nuevo.");
             List<HeladoDocument> listaHelados = heladoService.getListaHeladeria();
             model.addAttribute("helados", listaHelados);
@@ -78,7 +88,8 @@ public class VentaController {
         if (success) {
             model.addAttribute("mensaje", "¡Venta realizada con éxito!");
         } else {
-            model.addAttribute("error", "Error al procesar la venta. Verifique el stock, los helados seleccionados o el total general.");
+            model.addAttribute("error",
+                    "Error al procesar la venta. Verifique el stock, los helados seleccionados o el total general.");
         }
 
         List<HeladoDocument> listaHeladosActualizada = heladoService.getListaHeladeria();
@@ -96,5 +107,18 @@ public class VentaController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(java.util.Map.of("error", "Cliente no encontrado"));
         }
+    }
+
+    @GetMapping("/registroVentas")
+    public String mostrarVentas(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("fechaVenta").descending());
+        Page<VentaDocument> ventasPage = ventaRepository.findAllByOrderByFechaVentaDesc(pageable);
+
+        model.addAttribute("ventasPage", ventasPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", ventasPage.getTotalPages());
+
+        return "ventas";
     }
 }
