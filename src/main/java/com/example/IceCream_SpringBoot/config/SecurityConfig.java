@@ -14,6 +14,7 @@ import com.example.IceCream_SpringBoot.service.CustomUserDetailsService;
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return new CustomUserDetailsService(userRepository);
@@ -24,9 +25,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // DaoAuthenticationProvider es el encargado de autenticar usuarios.
-    // Usa el UserDetailsService para cargar los usuarios desde la base de datos.
-    // Compara la contraseña ingresada con la encriptada usando BCrypt.
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
@@ -36,15 +34,11 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // gestor general que decide como y con que proveedor autenticar a un usuario.
-    // usa el proveedor de autenticacion (DaoAuthenticationProvider) para verificar
-    // usuarios.
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
             UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .authenticationProvider(authenticationProvider(userDetailsService,
-                        passwordEncoder))
+                .authenticationProvider(authenticationProvider(userDetailsService, passwordEncoder))
                 .build();
     }
 
@@ -54,10 +48,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // publico
-                        .requestMatchers("/","/homePage","/login", "/css/**", "/img/**", "/api/email", "/api/chat").permitAll()
+                        .requestMatchers("/", "/homePage", "/login", "/css/**", "/img/**",
+                                "/api/email", "/api/chat", "/api/mcp", "/api/informe/**").permitAll()
                         // rutas de ventas: solo USER
                         .requestMatchers("/venderHelados", "/venderHelados/**", "/buscarCliente").hasRole("USER")
-                        //Todo lo demas: ADMIN
+                        // Todo lo demas: ADMIN
                         .anyRequest().hasRole("ADMIN"))
                 .formLogin(form -> form
                         .loginPage("/login")

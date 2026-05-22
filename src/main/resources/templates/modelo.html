@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Modelo Matemático ICE-CREAM</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+        body{
+            font-family:'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffe5ec 0%, #e0c3fc 35%, #bde0fe 70%, #caffbf 100%);
+            min-height:100vh;
+            padding:40px;
+        }
+
+        .main-container{
+            background:rgba(255,255,255,0.97);
+            border-radius:30px;
+            padding:40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .title{
+            text-align:center;
+            color:#7b2cbf;
+            font-size:42px;
+            font-weight:bold;
+            margin-bottom:20px;
+        }
+
+        .top-bar{
+            width:100%;
+            height:8px;
+            border-radius:20px;
+            margin-bottom:35px;
+            background: linear-gradient(90deg, #ff85c2, #b388eb, #72ddf7, #80ed99, #ffb703);
+        }
+
+        .custom-card{
+            background:white;
+            border-radius:25px;
+            padding:30px;
+            margin-bottom:35px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        .custom-card h2{
+            color:#7b2cbf;
+            margin-bottom:20px;
+            font-weight:bold;
+        }
+
+        .custom-card p,
+        .custom-card li{
+            color:#444;
+            line-height:1.9;
+        }
+
+        .table-container{
+            overflow-x:auto;
+        }
+
+        table{
+            min-width:1600px;
+        }
+
+        thead{
+            background: linear-gradient(90deg, #ff85c2, #b388eb, #72ddf7);
+            color:white;
+        }
+
+        th{
+            text-align:center;
+            padding:15px;
+        }
+
+        td{
+            text-align:center;
+            vertical-align:middle;
+        }
+
+        tbody tr:nth-child(even){
+            background:#fff0f6;
+        }
+
+        tbody tr:hover{
+            background:#e0f7ff;
+        }
+
+        .fo-row{
+            background:#ffb703 !important;
+            font-weight:bold;
+        }
+
+        .resultado-box{
+            background: linear-gradient(135deg, #ff85c2, #b388eb, #72ddf7);
+            color:white;
+            padding:35px;
+            border-radius:25px;
+            text-align:center;
+        }
+
+        .resultado-box h3{
+            font-size:38px;
+            font-weight:bold;
+        }
+
+        .resultado-box p{
+            font-size:20px;
+        }
+
+        @media(max-width:768px){
+            body{ padding:15px; }
+            .main-container{ padding:20px; }
+            .title{ font-size:30px; }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+
+        <div class="main-container">
+
+            <h1 class="title">
+                <i class="bi bi-bar-chart-line-fill"></i>
+                Modelo Matemático ICE-CREAM
+            </h1>
+
+            <div class="top-bar"></div>
+
+            <!-- DESCRIPCIÓN -->
+            <div class="custom-card">
+                <h2><i class="bi bi-info-circle-fill"></i> Descripción del Modelo</h2>
+                <p>Este modelo matemático fue desarrollado para optimizar la cantidad de helados que deben trasladarse desde el almacén hacia el mostrador principal de la heladería ICE-CREAM. El objetivo principal es maximizar la ganancia esperada teniendo en cuenta:</p>
+                <ul>
+                    <li>Precio de cada helado.</li>
+                    <li>Probabilidad de demanda de cada sabor.</li>
+                    <li>Stock disponible en almacén.</li>
+                    <li>Capacidad máxima del mostrador.</li>
+                    <li>Cantidad mínima que debe exhibirse de cada producto.</li>
+                </ul>
+                <br>
+                <p><b>Variables de decisión:</b> Las variables de decisión del modelo son <b>X1, X2, X3, ..., X16</b>, donde cada variable representa la cantidad de unidades de cada sabor de helado que deben trasladarse desde el almacén hacia el mostrador.</p>
+                <br>
+                <p><b>Objetivo del modelo:</b> El modelo busca <b>maximizar la ganancia esperada total</b> de la heladería ICE-CREAM, teniendo en cuenta los precios, la probabilidad de demanda, la capacidad del mostrador y las restricciones de stock disponibles.</p>
+            </div>
+
+            <!-- PASO A PASO -->
+            <div class="custom-card">
+                <h2><i class="bi bi-list-check"></i> Paso a Paso para Resolver el Modelo en Excel con Solver</h2>
+                <ol class="ps-3">
+                    <li>Se creó una tabla en Excel con los precios, probabilidades de demanda, stock disponible y variables de decisión.</li>
+                    <li>Se definieron las variables Xi como la cantidad de helados enviados del almacén al mostrador.</li>
+                    <li>Se construyó la función objetivo multiplicando: Precio × Probabilidad × Xi.</li>
+                    <li>Se sumaron todos los resultados individuales para obtener la Función Objetivo (F.O).</li>
+                    <li>Se agregaron las restricciones: capacidad máxima, stock disponible, mínimos de exhibición y no negatividad.</li>
+                    <li>Se habilitó el complemento Solver desde: Archivo → Opciones → Complementos → Solver.</li>
+                    <li>En Solver se configuró:<br><br>
+                        <b>Objetivo:</b> Maximizar la F.O.<br>
+                        <b>Variables:</b> X1 hasta X16.<br>
+                        <b>Restricciones:</b> R1-R33.<br>
+                        <b>Método:</b> Simplex LP.
+                    </li>
+                    <li>Finalmente Solver encontró la solución óptima respetando todas las restricciones planteadas.</li>
+                </ol>
+            </div>
+
+            <!-- RESTRICCIONES -->
+            <div class="custom-card">
+                <h2><i class="bi bi-sliders"></i> Restricciones del Modelo</h2>
+                <ul>
+                    <li>R1: X1+X2+X3+X4+X5+X6+X7+X8+X9+X10+X11+X12+X13+X14+X15+X16 ≤ 70</li>
+                    <li>R2: X1 ≤ 6</li>
+                    <li>R3: X2 ≤ 19</li>
+                    <li>R4: X3 ≤ 10</li>
+                    <li>R5: X4 ≤ 19</li>
+                    <li>R6: X5 ≤ 7</li>
+                    <li>R7: X6 ≤ 8</li>
+                    <li>R8: X7 ≤ 13</li>
+                    <li>R9: X8 ≤ 10</li>
+                    <li>R10: X9 ≤ 7</li>
+                    <li>R11: X10 ≤ 12</li>
+                    <li>R12: X11 ≤ 9</li>
+                    <li>R13: X12 ≤ 19</li>
+                    <li>R14: X13 ≤ 11</li>
+                    <li>R15: X14 ≤ 12</li>
+                    <li>R16: X15 ≤ 10</li>
+                    <li>R17: X16 ≤ 24</li>
+                    <li>R18-R33: Todas las variables Xi ≥ 2</li>
+                    <li>Restricción de no negatividad: X1,X2,...,X16 ≥ 0</li>
+                </ul>
+            </div>
+
+            <!-- RESULTADOS -->
+            <div class="custom-card">
+                <h2><i class="bi bi-table"></i> Resultados del Modelo con Solver</h2>
+                <div class="table-container">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Variables</th>
+                                <th>X1</th><th>X2</th><th>X3</th><th>X4</th>
+                                <th>X5</th><th>X6</th><th>X7</th><th>X8</th>
+                                <th>X9</th><th>X10</th><th>X11</th><th>X12</th>
+                                <th>X13</th><th>X14</th><th>X15</th><th>X16</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Resultado Solver</b></td>
+                                <td>6</td><td>2</td><td>10</td><td>12</td>
+                                <td>7</td><td>2</td><td>13</td><td>2</td>
+                                <td>2</td><td>2</td><td>2</td><td>2</td>
+                                <td>2</td><td>2</td><td>2</td><td>2</td>
+                            </tr>
+                            <tr class="fo-row">
+                                <td><b>Ganancia Esperada</b></td>
+                                <td>$2.850</td><td>$1.860</td><td>$2.450</td><td>$2.200</td>
+                                <td>$3.600</td><td>$2.100</td><td>$2.640</td><td>$1.800</td>
+                                <td>$1.800</td><td>$1.750</td><td>$1.400</td><td>$520</td>
+                                <td>$2.000</td><td>$1.800</td><td>$1.680</td><td>$2.100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FUNCIÓN OBJETIVO -->
+            <div class="custom-card">
+                <h2><i class="bi bi-trophy-fill"></i> Función Objetivo Óptima</h2>
+                <div class="resultado-box">
+                    <h3>F.O = $165.140,00</h3>
+                    <p>Ganancia máxima obtenida mediante Solver utilizando el método Simplex LP.</p>
+                </div>
+            </div>
+
+            <!-- BOTÓN DESCARGAR EXCEL -->
+            <div class="text-center mt-4 mb-2">
+                <a href="/excel/modelo.xlsx" download class="btn btn-lg px-5 py-3"
+                    style="background: linear-gradient(90deg, #1d6f42, #21a366); color: white; border-radius: 20px; font-weight: bold; text-decoration: none;">
+                     <i class="bi bi-file-earmark-excel-fill"></i> Descargar Excel
+                </a>
+            </div>
+
+            <!-- BOTÓN REGRESAR -->
+            <div class="text-center mt-4 mb-2">
+                <a href="/home" class="btn btn-lg px-5 py-3"
+                   style="background: linear-gradient(90deg, #7b2cbf, #b388eb); color: white; border-radius: 20px; font-weight: bold; text-decoration: none;">
+                    <i class="bi bi-arrow-left-circle-fill"></i> Regresar al Panel Admin
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

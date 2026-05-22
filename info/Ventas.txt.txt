@@ -1,0 +1,12 @@
+REPORTE DE VENTAS - ICE CREAM
+Total de ventas registradas: 20011
+
+Ultimas ventas:
+- 22/04/2026 | Vendedor: danilo | Cliente: juan | Total: $8000 | Producto: coconut x2
+- 12/04/2026 | Vendedor: danilo | Cliente: marcela martinez | Total: $11330 | Productos: coconut x1, dracula x1
+- 07/04/2026 | Vendedor: juan | Cliente: sebastian guzman | Total: $2800 | Producto: paleta tropical x1
+- 04/03/2026 | Vendedor: oscar | Cliente: marcela martinez | Total: $14000 | Producto: chococono x4
+- 04/03/2026 | Vendedor: oscar | Cliente: Brandon Osorio | Total: $3000 | Producto: vainillaDeluxe x1
+
+Metodos de pago: efectivo, tarjeta
+Vendedores activos: danilo, juan, oscar, dilan

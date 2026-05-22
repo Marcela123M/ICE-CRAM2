@@ -1,0 +1,42 @@
+========================================
+     INFORME DE INVENTARIO ICE CREAM    
+     Fecha: 2026-05-19T19:26:30.561712700
+========================================
+
+--- ALMACEN (19 helados) ---
+• limonVerano | Sabor: limon | Precio: $2500.0 | Unidades: 26
+• duraznoMagico | Sabor: durazno | Precio: $3300.0 | Unidades: 21
+• moraCielo | Sabor: mora | Precio: $2500.0 | Unidades: 3
+• mentaFresca | Sabor: menta | Precio: $2600.0 | Unidades: 19
+• vainillaDeluxe | Sabor: vainilla | Precio: $3000.0 | Unidades: 24
+• mango | Sabor: mango | Precio: $2800.0 | Unidades: 9
+• carameloCremoso | Sabor: caramelo | Precio: $3100.0 | Unidades: 4
+• fresaPasion | Sabor: fresa | Precio: $3000.0 | Unidades: 4
+• coconut | Sabor: coco | Precio: $4000.0 | Unidades: 12
+• coco vegano | Sabor: coco | Precio: $11000.0 | Unidades: 8
+• cafe valdez | Sabor: cafe | Precio: $9500.0 | Unidades: 0
+• nutella kids | Sabor: nutella | Precio: $4500.0 | Unidades: 12
+• paleta tropical | Sabor: maracuya | Precio: $2800.0 | Unidades: 10
+• Fresa Explosiva | Sabor: fresa | Precio: $2000.0 | Unidades: 10
+• dracula | Sabor: fresa | Precio: $7000.0 | Unidades: 5
+• chococono | Sabor: chocolate | Precio: $3500.0 | Unidades: 10
+• helado nombre | Sabor: sabor | Precio: $10.0 | Unidades: 10
+• Chocolate | Sabor: Chocolate | Precio: $5.0 | Unidades: 20
+• prueba | Sabor: vainilla | Precio: $2000.0 | Unidades: 5
+
+--- HELADERIA (15 helados) ---
+• carameloCremoso | Sabor: caramelo | Precio: $3100.0 | Unidades: 19
+• chococono | Sabor: chocolate | Precio: $3500.0 | Unidades: 5
+• moraCielo | Sabor: mora | Precio: $2500.0 | Unidades: 8
+• fresaPasion | Sabor: fresa | Precio: $3000.0 | Unidades: 3
+• mentaFresca | Sabor: menta | Precio: $2600.0 | Unidades: 10
+• coconut | Sabor: coco | Precio: $4000.0 | Unidades: 7
+• mango | Sabor: mango | Precio: $2800.0 | Unidades: 15
+• coco vegano | Sabor: coco | Precio: $11000.0 | Unidades: 19
+• cafe valdez | Sabor: cafe | Precio: $9500.0 | Unidades: 6
+• nutella kids | Sabor: nutella | Precio: $4500.0 | Unidades: 7
+• paleta tropical | Sabor: maracuya | Precio: $2800.0 | Unidades: 6
+• Fresa Explosiva | Sabor: fresa | Precio: $2000.0 | Unidades: 0
+• duraznoMagico | Sabor: durazno | Precio: $3300.0 | Unidades: 13
+• vainillaDeluxe | Sabor: vainilla | Precio: $3000.0 | Unidades: 8
+• dracula | Sabor: fresa | Precio: $7000.0 | Unidades: 8
