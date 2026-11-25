@@ -23,8 +23,8 @@ RUN apt-get update && apt-get install -y nodejs npm \
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
+COPY info ./info
 
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
