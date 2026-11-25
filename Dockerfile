@@ -17,7 +17,7 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:17-jre
 
 RUN apt-get update && apt-get install -y nodejs npm \
-    && npm install -g @modelcontextprotocol/server-filesystem \
+    && npm install -g @modelcontextprotocol/server-filesystem@0.6.2 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
