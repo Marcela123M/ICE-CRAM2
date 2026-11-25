@@ -1,4 +1,3 @@
-
 # Etapa 1: Construir la aplicación con Maven
 FROM maven:3.9.9-eclipse-temurin-17 AS build
 
@@ -16,6 +15,8 @@ RUN ./mvnw clean package -DskipTests
 
 # Etapa 2: Ejecutar la aplicación
 FROM eclipse-temurin:17-jre
+
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
